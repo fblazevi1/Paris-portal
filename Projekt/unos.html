@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta name="author" content="Frano Blazevic">
+  <meta charset="utf-8">
+  <title>LeParisien</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="shortcut icon" href="img/LeParisien-favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+    <div id="login">
+        <a href="login.php">LOGIN</a>
+        <form enctype="multipart/form-data" action="login.php" method="POST">
+            <button type="submit" name="odjava" value="logOut" id="slanje">LOG OUT</button>
+        </form>
+    </div>
+    <h1><a href="index.php"><img src="img/LeParisien-logo.png" id="logo" alt="LeParisien - logo"></a></h1>
+    <nav>
+        <ul>
+            <li><a href="index.php">HOME</a></li>
+            <li><a href="kategorija.php?id=LjubavniBrodolomi">BRODOLOMI</a></li>
+            <li><a href="kategorija.php?id=KogaBriga">KOGA BRIGA</a></li>
+            <li><a href="administrator.php">ADMINISTRACIJA</a></li>
+            <li><a href="unos.html">UNOS VIJESTI</a></li>
+            <li><a href="registracija.php">REGISTRACIJA</a></li>
+        </ul>
+    </nav>
+</header>
+
+<form enctype="multipart/form-data" name="objava" action="insert.php" method="POST"> 
+    <div class="form-item first"> 
+        <span id="porukaTitle" class="bojaPoruke error"></span>
+        <label for="title">Naslov vijesti</label> 
+        <div class="form-field"> 
+            <input type="text" name="title" id="title" class="form-field-textual" autofocus="on"> 
+        </div> 
+    </div>
+    <div class="clearfloat"></div>
+    <div class="form-item second">
+        <span id="porukaAbout" class="bojaPoruke error"></span>
+        <label for="about">Kratki sadržaj vijesti (do 50 znakova)</label> 
+        <div class="form-field"> 
+            <textarea name="about" id="about" cols="30" rows="10" class="form-field-textual"></textarea> 
+        </div>
+    </div>
+    <div class="form-item second">
+        <span id="porukaContent" class="bojaPoruke error"></span>
+        <label for="content">Sadržaj vijesti</label>
+        <div class="form-field"> 
+            <textarea name="content" id="content" cols="30" rows="10" class="form-field-textual"></textarea>
+        </div> 
+    </div>
+    <div class="clearfloat"></div>
+    <div class="form-item third">
+        <span id="porukaSlika" class="bojaPoruke error"></span>
+        <label for="picture">Slika: </label>
+        <div class="form-field"> 
+            <input type="file" accept="image/jpg" id="picture" name="picture"/> 
+        </div> 
+    </div> 
+    <div class="form-item third">
+        <span id="porukaKategorija" class="bojaPoruke error"></span>
+        <label for="category">Kategorija vijesti</label>
+        <div class="form-field"> 
+            <select name="category" id="category" class="form-field-textual"> 
+                <option value="LjubavniBrodolomi">LjubavniBrodolomi</option> 
+                <option value="KogaBriga">KogaBriga</option> 
+            </select> 
+        </div> 
+    </div> 
+    <div class="form-item third"> 
+        <label>Spremiti u arhivu:
+            <div class="form-field">
+                <input type="checkbox" name="archive">
+            </div>
+        </label>
+    </div>
+    <div class="clearfloat"></div>
+    <div class="form-item">
+        <button id="slanje" type="submit" value="Prihvati">Prihvati</button>
+        <button type="reset" value="Poništi">Poništi</button>
+    </div>
+</form>
+
+<footer>
+    <p>ⓒ Frano Blažević, 2021</p>
+    <p>Contact: fblazevi1@tvz.hr</p>
+    
+</footer>
+</body>
+<script type="text/javascript"> 
+    // Provjera forme prije slanja
+    document.getElementById("slanje").onclick = function(event) {
+        var slanjeForme = TRUE;
+
+        // Naslov vjesti (5-30 znakova)
+        var poljeTitle = document.getElementById("title");
+        var title = document.getElementById("title").value;
+        if (title.length < 5 || title.length > 30) {
+            slanjeForme = FALSE; poljeTitle.style.border="1px dashed red";
+            document.getElementById("porukaTitle").innerHTML="Naslov vjesti mora imati između 5 i 30 znakova!<br>";
+        } 
+        else {
+            poljeTitle.style.border="1px solid green";
+            document.getElementById("porukaTitle").innerHTML=""; 
+        }
+
+        // Kratki sadržaj (10-100 znakova)
+        var poljeAbout = document.getElementById("about");
+        var about = document.getElementById("about").value;
+        if (about.length < 10 || about.length > 100) {
+            slanjeForme = FALSE; poljeAbout.style.border="1px dashed red";
+            document.getElementById("porukaAbout").innerHTML="Kratki sadržaj mora imati između 10 i 50 znakova!<br>";
+        }
+        else{ 
+            poljeAbout.style.border="1px solid green";
+            document.getElementById("porukaAbout").innerHTML="";
+        }
+
+        // Sadržaj mora biti unesen
+        var poljeContent = document.getElementById("content");
+        var content = document.getElementById("content").value;
+        if (content.length == 0) {
+            slanjeForme = FALSE; poljeContent.style.border="1px dashed red";
+            document.getElementById("porukaContent").innerHTML="Sadržaj mora biti unesen!<br>";
+        }
+        else{ 
+            poljeContent.style.border="1px solid green";
+            document.getElementById("porukaContent").innerHTML="";
+        }
+
+        // Slika mora biti unesena
+        var poljeSlika = document.getElementById("picture");
+        var picture = document.getElementById("picture").value;
+        if (picture.length == 0) {
+            slanjeForme = FALSE;
+            poljeSlika.style.border="1px dashed red";
+            document.getElementById("porukaSlika").innerHTML="Slika mora biti unesena!<br>";
+        }
+        else{
+            poljeSlika.style.border="1px solid green"; document.getElementById("porukaSlika").innerHTML="";
+        }
+
+        // Kategorija mora biti odabrana
+        var poljeCategory = document.getElementById("category");
+        if(document.getElementById("category").selectedIndex == 0) {
+            slanjeForme = FALSE; poljeCategory.style.border="1px dashed red";
+            document.getElementById("porukaKategorija").innerHTML="Kategorija mora biti odabrana!<br>";
+            }
+        else{
+            poljeCategory.style.border="1px solid green";
+            document.getElementById("porukaKategorija").innerHTML="";
+            }
+
+        if (slanjeForme != TRUE) {
+            event.preventDefault();
+        }
+    };
+</script>
+</html>
